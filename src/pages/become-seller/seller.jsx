@@ -49,18 +49,6 @@ function Seller() {
                 Start Selling
               </Button>
             </NavLink>
-            <NavLink to="/register">
-              <Button
-                style={{
-                  backgroundColor: "green",
-                  border: "1px solid black",
-                  borderRadius: "5px",
-                }}
-                className="ms-2"
-              >
-                Register
-              </Button>
-            </NavLink>
           </div>
         </Container>
       </Navbar>

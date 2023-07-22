@@ -11,7 +11,7 @@ const ErrorPage = () => {
           <Col>
             <p>
               Click
-              <NavLink to="/">Home</NavLink> to go back to Home page
+              <NavLink to="/"> Home</NavLink> to go back to Home page
             </p>
           </Col>
         </Row>

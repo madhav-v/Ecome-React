@@ -26,7 +26,27 @@ function Login() {
     onSubmit: async (values) => {
       try {
         let response = await axiosInstance.post("/v1/auth/login", values);
-        console.log(response);
+        if (response.status) {
+          let formattedData = {
+            id: response.result.data._id,
+            name: response.result.data.name,
+            email: response.result.data.email,
+            role: response.result.data.role,
+          };
+          localStorage.setItem(
+            "accessToken",
+            response.result.token.accessToken
+          );
+          localStorage.setItem(
+            "refreshToken",
+            response.result.token.refreshToken
+          );
+          localStorage.setItem("user", JSON.stringify(formattedData));
+          toast.success("Welcome to " + formattedData.role + " page");
+          navigate("/" + formattedData.role);
+        } else {
+          toast.error(response.msg);
+        }
       } catch (axiosErrorResponse) {
         toast.error(axiosErrorResponse.data.msg);
         console.log(

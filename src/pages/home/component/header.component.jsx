@@ -13,6 +13,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import {
+  FaBell,
   FaFacebook,
   FaInstagram,
   FaShoppingCart,
@@ -60,38 +61,53 @@ const Header = () => {
               Search
             </Button>
           </Form>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
+          <Nav>
+            <Link
+              to="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "white",
+                marginRight: "20px",
+                marginLeft: "149px",
+              }}
+            >
+              <FaFacebook size={20} color="black" />
+            </Link>
+            <Link
+              to="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "white", marginRight: "20px" }}
+            >
+              <FaInstagram size={20} color="black" />
+            </Link>
+            <Link
+              to="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "white", marginRight: "20px" }}
+            >
+              <FaTwitter size={20} color="black" />
+            </Link>
+            <Link
+              to="https://www.tiktok.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ marginRight: "100px", color: "white" }}
+            >
+              <FaTiktok size={20} color="black" />
+            </Link>
+          </Nav>
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav>
-              <NavLink className={"nav-link"} to="/seller">
-                Become a Seller
-              </NavLink>
-              <NavLink className={"nav-link"} to="/blogs">
-                Blogs
-              </NavLink>
-              <NavDropdown title="More" id="basic-nav-dropdown">
-                <Link className={"dropdown-item"} to="/notifications">
-                  Notification Preferences
-                </Link>
-                <NavDropdown.Divider />
-                <Link className={"dropdown-item"} to="/customer-care">
-                  24/7 Customer Care
-                </Link>
-                <NavDropdown.Divider />
-                <Link className={"dropdown-item"} to="/ads">
-                  Advertise
-                </Link>
-                <NavDropdown.Divider />
-                <Link className="dropdown-item" to="/app">
-                  Download App
-                </Link>
-              </NavDropdown>
-            </Nav>
             <Nav className="mx-auto">
               <NavLink className={"nav-link"} to="/cart">
                 <FaShoppingCart size={"20px"} color="black" />
               </NavLink>
-
+              <NavLink className={"nav-link"} to="/notifications">
+                <FaBell size={"20px"} color="black" />
+              </NavLink>
               <NavDropdown
                 title={<FaUser color="black" />}
                 id="basic-nav-dropdown"
@@ -104,60 +120,7 @@ const Header = () => {
                 </Link>
               </NavDropdown>
             </Nav>
-            <Nav>
-              <Link
-                to="https://www.instagram.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: "white",
-                  marginRight: "10px",
-                  marginLeft: "149px",
-                }}
-              >
-                <FaFacebook size={20} color="black" />
-              </Link>
-              <Link
-                to="https://www.instagram.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "white", marginRight: "10px" }}
-              >
-                <FaInstagram size={20} color="black" />
-              </Link>
-              <Link
-                to="https://twitter.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "white", marginRight: "10px" }}
-              >
-                <FaTwitter size={20} color="black" />
-              </Link>
-              <Link
-                to="https://www.tiktok.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ marginRight: "100px", color: "white" }}
-              >
-                <FaTiktok size={20} color="black" />
-              </Link>
-            </Nav>
           </Navbar.Collapse>
-          {/* <Nav>
-            <Nav>
-              <NavLink className={"nav-link"} to="/cart">
-                <FaShoppingCart size={"20px"} color="black" />
-              </NavLink>
-            </Nav>
-            <NavDropdown title={<FaUser color="black" />}>
-              <Link className={"dropdown-item"} to="/login">
-                Login
-              </Link>
-              <Link className={"dropdown-item"} to="/register">
-                Register
-              </Link>
-            </NavDropdown>
-          </Nav> */}
         </Container>
       </Navbar>
       <hr style={{ margin: "0", borderTop: "1px solid #333333" }} />
@@ -286,7 +249,7 @@ const Header = () => {
               <NavDropdown
                 title="TV AND APPLIANCES"
                 id="basic-nav-dropdown"
-                style={{ marginLeft: "10px" }}
+                style={{ marginLeft: "20px" }}
               >
                 <Link className="dropdown-item" to="/category/tv/32-lcd">
                   32" LCD

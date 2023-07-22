@@ -1,21 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Container, Row, Button, Card, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Auth } from "..";
+import { toast } from "react-toastify";
 
 const ForgetPassword = () => {
+  let [loading, setLoading] = useState(false);
+
   const LoginSchema = Yup.object({
     email: Yup.string().email().required(),
   });
 
   const formik = useFormik({
     initialValues: {
-      email: null,
+      email: "",
     },
     validationSchema: LoginSchema,
-    onSubmit: (values) => {
-      console.log("🚀 ~ file: login.pages.jsx:17 ~ Login ~ values:", values);
+    onSubmit: async (values) => {
+      setLoading(true);
+
+      try {
+        const response = await Auth.authSvc.forgetPassword(values.email);
+
+        localStorage.setItem("email", values.email);
+
+        if (response.status === true) {
+          toast.success(response.msg);
+        } else {
+          toast.error(response.msg || "Something went wrong.");
+        }
+      } catch (error) {
+        toast.error("Error occurred. Please try again later.");
+      }
+
+      setLoading(false);
     },
   });
 
@@ -48,10 +68,12 @@ const ForgetPassword = () => {
                       placeholder="Enter email"
                       name="email"
                       onChange={formik.handleChange}
+                      value={formik.values.email}
                     />
                     <span className="text-danger">{formik.errors?.email}</span>
                   </Form.Group>
                   <Button
+                    disabled={loading}
                     variant="dark"
                     type="submit"
                     style={{ width: "200px" }}

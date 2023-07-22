@@ -17,6 +17,7 @@ import AdminLayout from "../pages/layout/admin.layout";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import CheckPermission from "./rbsc.config";
+import ActivateUser from "../pages/auth/register/activate-user.page";
 
 const Routing = () => {
   return (
@@ -32,6 +33,7 @@ const Routing = () => {
             <Route path="blogs" element={<Blogs />}></Route>
             <Route path="login" element={<Login />}></Route>
             <Route path="register" element={<Register />}></Route>
+            <Route path="/activate/:tokem" element={<ActivateUser />} />
             <Route path="forget-password" element={<ForgetPassword />}></Route>
             <Route path="set-password/:token" element={<SetPassword />}></Route>
             <Route path="cart" element={<Cart />}></Route>
