@@ -12,14 +12,27 @@ import {
   FaTags,
   FaUsers,
 } from "react-icons/fa";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import noUser from "../../assets/images/no-user.png";
+import { toast } from "react-toastify";
 
 export const AdminTopNav = () => {
   const toggleSidebar = (e) => {
     e.preventDefault();
     document.body.classList.toggle("sb-sidenav-toggled");
   };
+  const navigate = useNavigate();
+
+  const logout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    localStorage.removeItem("email");
+    toast.success("Thank you for using our system");
+    navigate("/login");
+  };
+
   return (
     <>
       <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark fixed-top">
@@ -71,9 +84,9 @@ export const AdminTopNav = () => {
               </li>
               <li></li>
               <li>
-                <Link className="dropdown-item" to="/logout">
+                <NavLink onClick={logout} className="dropdown-item" to="/login">
                   Logout
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </li>
@@ -124,51 +137,51 @@ export const AdminSidebar = () => {
                 data-bs-parent="#sidenavAccordion"
               >
                 <nav className="sb-sidenav-menu-nested nav">
-                  <a className="nav-link" href="layout-static.html">
+                  <NavLink className="nav-link" to="/admin/banner/create">
                     Add Banner
-                  </a>
-                  <a className="nav-link" href="layout-sidenav-light.html">
+                  </NavLink>
+                  <NavLink className="nav-link" to="/admin/banner/edit/123">
                     List Banner
-                  </a>
+                  </NavLink>
                 </nav>
               </div>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/brand">
                 <div className="sb-nav-link-icon">
                   <FaTags />
                 </div>
                 Brand Management
               </NavLink>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/category">
                 <div className="sb-nav-link-icon">
                   <FaSquarespace />
                 </div>
                 Category Management
               </NavLink>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/user">
                 <div className="sb-nav-link-icon">
                   <FaUsers />
                 </div>
                 User Management
               </NavLink>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/user">
                 <div className="sb-nav-link-icon">
                   <FaProductHunt />
                 </div>
                 Product Management
               </NavLink>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/order">
                 <div className="sb-nav-link-icon">
                   <FaShoppingBag />
                 </div>
                 Order Management
               </NavLink>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/transaction">
                 <div className="sb-nav-link-icon">
                   <FaDollarSign />
                 </div>
                 Transactions Management
               </NavLink>
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/admin/review">
                 <div className="sb-nav-link-icon">
                   <FaStreetView />
                 </div>
@@ -192,7 +205,7 @@ export const AdminFooter = () => {
       <footer className="py-4 bg-light mt-auto">
         <div className="container-fluid px-4">
           <div className="d-flex align-items-center justify-content-between small">
-            <div className="text-muted">Copyright &copy; Your Website 2023</div>
+            <div className="text-muted">Copyright &copy; Ordinary 2023</div>
             <div>
               <a href="#">Privacy Policy</a>
               &middot;

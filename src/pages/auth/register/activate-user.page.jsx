@@ -11,7 +11,7 @@ const ActivateUser = () => {
     try {
       let user = await Auth.authSvc.getUserByToken(params.tokem);
       toast.success(
-        "Your account has been activated successfullu. Please login to continue.."
+        "Your account has been activated successfully. Please login to continue.."
       );
       navigate("/login");
     } catch (exception) {
