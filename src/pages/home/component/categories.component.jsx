@@ -1,52 +1,69 @@
-import React from "react";
-import { Card, Container } from "react-bootstrap";
-import "./card.css";
-import card1 from "../../../assets/images/card-1.jpg";
-import card2 from "../../../assets/images/card-2.jpg";
-import card3 from "../../../assets/images/card-3.jpg";
-import card4 from "../../../assets/images/card-4.jpg";
+import React, { useCallback, useState, useEffect } from "react";
+import { Card, Col, Container, Row } from "react-bootstrap";
+import category from "../../admin/category";
+import product from "../../admin/product";
+import SingleProductListGrid from "./single-product-list-grid.component";
 
 const Categories = () => {
+  const [cats, setCats] = useState();
+  const loadCategories = useCallback(async () => {
+    let response = await category.categorySvc.listAllHomeCategories(20, 1);
+    setCats(response.result);
+  }, []);
+
+  const [productList, setProductList] = useState();
+
+  const loadProducts = useCallback(async () => {
+    let response = await product.productSvc.listHomeProducts(24, 1);
+    setProductList(response.result);
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+    loadProducts();
+  }, []);
+
   return (
     <>
-      <Container
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <h3>Best Sellers</h3>
+      <Container fluid className="my-5 bg-light">
+        <Row className="p-3">
+          <Col>
+            <h4>Category List</h4>
+          </Col>
+        </Row>
+        <Row className="my-3 bg-light">
+          {cats &&
+            cats.map((category, index) => (
+              <Col sm={6} md={4} lg={2} className="mb-3" key={index}>
+                <Card>
+                  <Card.Img
+                    variant="top"
+                    src={
+                      import.meta.env.VITE_IMAGE_URL +
+                      "/category/" +
+                      category.image
+                    }
+                    style={{ width: "100%", height: "300px" }}
+                  ></Card.Img>
+                  <Card.Title>{category.name}</Card.Title>
+                </Card>
+              </Col>
+            ))}
+        </Row>
       </Container>
 
-      <Container style={{ display: "flex", flexWrap: "wrap" }}>
-        <Container style={{ display: "flex", flexWrap: "wrap" }}>
-          <Card style={{ width: "18rem", margin: "10px" }}>
-            <Card.Img variant="top" src={card1} className="card-img" />
-            <Card.Body>
-              <Card.Title>Samsung Phones</Card.Title>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "10px" }}>
-            <Card.Img variant="top" src={card2} className="card-img" />
-            <Card.Body>
-              <Card.Title>Smart TV</Card.Title>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "10px" }}>
-            <Card.Img variant="top" src={card3} className="card-img" />
-            <Card.Body>
-              <Card.Title>Guitar</Card.Title>
-            </Card.Body>
-          </Card>
-          <Card style={{ width: "18rem", margin: "10px" }}>
-            <Card.Img variant="top" src={card4} className="card-img" />
-            <Card.Body>
-              <Card.Title>Sneakers</Card.Title>
-            </Card.Body>
-          </Card>
-        </Container>
+      <Container fluid className="my-5 bg-light">
+        <Row className="py-5">
+          <Col>
+            <h4 className="text-center">Products</h4>
+          </Col>
+        </Row>
+        <Row>
+          {productList &&
+            productList.map((prod, index) => (
+              <SingleProductListGrid key={index} product={prod} />
+            ))}
+        </Row>
       </Container>
     </>
   );

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Homepage from "../pages/home";
 import ErrorPage from "../pages/errors/404.page";
 import CategoryDetail from "../pages/category/detail.page";
 import HomePageLayout from "../pages/layout/home.layout";
 import Blogs from "../pages/blogs/blogs";
-
+import AboutUs from "../pages/home/about-us.page";
 import Seller from "../pages/become-seller/seller";
 import Cart from "../pages/carts/carts";
 import Register from "../pages/auth/register/register.pages";
@@ -19,8 +19,17 @@ import { ToastContainer } from "react-toastify";
 import CheckPermission from "./rbsc.config";
 import ActivateUser from "../pages/auth/register/activate-user.page";
 import Banner from "../pages/admin/banner/";
+import Brand from "../pages/admin/brand/";
+import Category from "../pages/admin/category/";
+import Product from "../pages/admin/product/";
+import { useDispatch } from "react-redux";
+import { getLoggedInUser } from "../reducers/user.reducer";
 
 const Routing = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getLoggedInUser());
+  }, []);
   return (
     <>
       <ToastContainer />
@@ -28,6 +37,8 @@ const Routing = () => {
         <Routes>
           <Route path="/" element={<HomePageLayout />}>
             <Route index element={<Homepage />} />
+
+            <Route path="about-us" element={<AboutUs />}></Route>
 
             <Route path="category/:slug" element={<CategoryDetail />}></Route>
 
@@ -58,12 +69,23 @@ const Routing = () => {
                 </>
               }
             >
-              <Route index element={<>List</>} />
+              <Route index element={<Banner.BannerListPage />} />
               <Route path="create" element={<Banner.BannerCreateForm />} />
-              <Route path="edit/:id" element={<>Edit Form</>} />
+              <Route path=":id" element={<Banner.BannerEditForm />} />
             </Route>
 
-            <Route path="brand" element={<>Brand</>} />
+            <Route
+              path="brand"
+              element={
+                <>
+                  <Outlet />
+                </>
+              }
+            >
+              <Route index element={<Brand.BrandListPage />} />
+              <Route path="create" element={<Brand.BrandCreateForm />} />
+              <Route path=":id" element={<Brand.BrandEditForm />} />
+            </Route>
 
             <Route
               path="category"
@@ -72,7 +94,11 @@ const Routing = () => {
                   <Outlet />
                 </>
               }
-            />
+            >
+              <Route index element={<Category.CategoryListPage />} />
+              <Route path="create" element={<Category.CategoryCreateForm />} />
+              <Route path=":id" element={<Category.CategoryEditForm />} />
+            </Route>
 
             <Route
               path="user"
@@ -89,7 +115,11 @@ const Routing = () => {
                   <Outlet />
                 </>
               }
-            />
+            >
+              <Route index element={<Product.ProductListPage />} />
+              <Route path="create" element={<Product.ProductCreateForm />} />
+              <Route path=":id" element={<Product.ProductEditForm />} />
+            </Route>
             <Route
               path="order"
               element={

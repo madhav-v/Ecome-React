@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -8,6 +8,8 @@ import * as Yup from "yup";
 import noUser from "../../../assets/images/no-user.png";
 import AuthService from "./auth.service";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+
 // import { Auth } from "./";
 
 function Register() {
@@ -62,14 +64,26 @@ function Register() {
           toast.success(
             "Your account has been registered. Please Check your email for activation Process!"
           );
-          setLoading(false);
           navigate("/");
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     },
   });
+
+  let loggedInUser = useSelector((root) => {
+    return root.User?.loggedInUser;
+  });
+  useEffect(() => {
+    if (loggedInUser) {
+      toast.info("You are already logged in");
+      navigate("/" + loggedInUser.role);
+    }
+  }, [loggedInUser]);
+
   return (
     <Container style={{ width: "500px", marginTop: "50px" }}>
       <Container>

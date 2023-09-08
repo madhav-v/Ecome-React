@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Card,
@@ -8,22 +8,23 @@ import {
   Form,
   Button,
 } from "react-bootstrap";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaEdit, FaPaperPlane, FaRedo } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { TextInput } from "../../../components/form-component";
-import banner from ".";
+import brand from ".";
 import { toast } from "react-toastify";
+import { formatDate } from "../../../config/function";
 
-const BannerCreateForm = () => {
+const BrandEditForm = () => {
   const navigate = useNavigate();
+  const params = useParams();
+
+  const [detail, setDetail] = useState();
 
   const validationSchema = Yup.object({
-    title: Yup.string().required(),
-    link: Yup.string().url().nullable(),
-    startDate: Yup.date().required(),
-    endDate: Yup.date().min(Yup.ref("startDate")).required(),
+    name: Yup.string().required(),
     status: Yup.string()
       .matches(/active|inactive/)
       .required(),
@@ -32,39 +33,62 @@ const BannerCreateForm = () => {
   let formik = useFormik({
     initialValues: {
       title: "",
-      link: "",
-      startDate: "",
-      endDate: "",
       status: "",
       image: {},
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        // console.log(values);
-        // // submit
-        const response = await banner.bannerSvc.createBanner(values);
+        if (typeof values.image !== "object") {
+          delete values.image;
+        }
+        const response = await brand.brandSvc.updateBrand(values, params.id);
         toast.success(response.msg);
-        navigate("/admin/banner");
+        navigate("/admin/brand");
       } catch (error) {
         // TODO: Debug for error
         toast.error(
-          "Cannot create banner. Retry again after reloading the page..."
+          "Cannot update brand. Retry again after reloading the page..."
         );
       }
     },
   });
+
+  const getBrandDetail = async () => {
+    try {
+      let response = await brand.brandSvc.getBrandById(params.id);
+      setDetail(response.result);
+    } catch (exception) {
+      toast.error("Brand cannot be fetched");
+      navigate("/admin/brand");
+    }
+  };
+
+  useEffect(() => {
+    if (detail) {
+      formik.setValues({
+        name: detail.name,
+        status: detail.status,
+        image: detail.image,
+      });
+    }
+  }, [detail]);
+
+  useEffect(() => {
+    getBrandDetail();
+  }, []);
+
   return (
     <>
       <Container fluid className="px-4">
         <Row>
           <Col sm={12} md={6}>
-            <h1 className="mt-4">Banner Create Page</h1>
+            <h1 className="mt-4">Brand Edit Page</h1>
           </Col>
           <Col md={6} sm={12} className="d-none d-md-block">
             <NavLink
               className={"btn btn-sm btn-success mt-5 float-end"}
-              to="/admin/banner"
+              to="/admin/brand"
             >
               <FaArrowLeft /> Go To List
             </NavLink>
@@ -72,16 +96,12 @@ const BannerCreateForm = () => {
         </Row>
         <Breadcrumb className="mb-4">
           <Breadcrumb.Item>
-            <li className="breadcrumb-item">
-              <Link role="button" className={"breadcrumb-item"} to="/admin">
-                Dashboard
-              </Link>
-            </li>
+            <NavLink to="/admin">Dashboard</NavLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <NavLink to="/admin/banner">Banner Listing</NavLink>
+            <NavLink to="/admin/brand">Brand Listing</NavLink>
           </Breadcrumb.Item>
-          <Breadcrumb.Item active>Banner Create</Breadcrumb.Item>
+          <Breadcrumb.Item active>Brand Edit</Breadcrumb.Item>
         </Breadcrumb>
 
         <Card className="mb-4">
@@ -89,53 +109,12 @@ const BannerCreateForm = () => {
             <Form onSubmit={formik.handleSubmit}>
               <TextInput
                 label="Name"
-                name="title"
+                name="name"
+                value={formik.values?.name}
                 changeEvent={formik.handleChange}
-                placeholder="Enter title..."
-                error={formik.errors?.title}
+                placeholder="Enter name..."
+                error={formik.errors?.name}
               />
-
-              <TextInput
-                label="URL(For Redirection):"
-                type="url"
-                name="link"
-                changeEvent={formik.handleChange}
-                placeholder="Enter URL..."
-                error={formik.errors?.link}
-              />
-
-              <Form.Group className="row mb-3">
-                <Form.Label className="col-sm-3">Date(Start-End): </Form.Label>
-                <Col sm={9}>
-                  <Row>
-                    <Col sm={6}>
-                      <Form.Control
-                        type="date"
-                        name="startDate"
-                        onChange={formik.handleChange}
-                        value={formik.values?.startDate}
-                        placeholder="Start Date"
-                        size="sm"
-                      />
-                      <span className="text-danger">
-                        {formik.errors?.startDate}
-                      </span>
-                    </Col>
-                    <Col sm={6}>
-                      <Form.Control
-                        type="date"
-                        name="endDate"
-                        onChange={formik.handleChange}
-                        value={formik.values?.endDate}
-                        size="sm"
-                      />
-                      <span className="text-danger">
-                        {formik.errors?.endDate}
-                      </span>
-                    </Col>
-                  </Row>
-                </Col>
-              </Form.Group>
 
               <Form.Group className="row mb-3">
                 <Form.Label className="col-sm-3">Status: </Form.Label>
@@ -217,4 +196,4 @@ const BannerCreateForm = () => {
   );
 };
 
-export default BannerCreateForm;
+export default BrandEditForm;

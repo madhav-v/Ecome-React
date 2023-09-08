@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Breadcrumb, Card } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   return (
@@ -8,9 +8,12 @@ const AdminDashboard = () => {
       <Container fluid className="px-4">
         <h1 className="mt-4">Dashboard</h1>
         <Breadcrumb className="mb-4">
-          <Breadcrumb.Item>
-            <NavLink to="/admin">Dashboard</NavLink>
-          </Breadcrumb.Item>
+          <li className="breadcrumb-item">
+            <Link role="button" className={"breadcrumb-item"} to="/admin">
+              Dashboard
+            </Link>
+          </li>
+
           <Breadcrumb.Item active>Home</Breadcrumb.Item>
         </Breadcrumb>
 

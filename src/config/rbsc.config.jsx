@@ -13,7 +13,7 @@ const CheckPermission = ({ Component, accessBy }) => {
       let user = await Auth.authSvc.getLoggedInUser();
       setUserInfo(user.result);
     } catch (error) {
-      toast.error("Could not process your request at the moment");
+      toast.error("Please Login First");
       setError(true);
     } finally {
       setLoading(false);
@@ -24,14 +24,15 @@ const CheckPermission = ({ Component, accessBy }) => {
   }, []);
 
   if (error) {
-    return <>Eroor Loading Content..</>;
+    return <Navigate to={"/login"} />;
   } else {
     if (loading) {
       return <>Loading</>;
     } else if (!loading && userInfo && userInfo.role === accessBy) {
       return Component;
     } else {
-      toast.warning("");
+      toast.warning("You do not have permission to access this page");
+      return <Navigate to={"/" + userInfo.role} />;
     }
   }
 

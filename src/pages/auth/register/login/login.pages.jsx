@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -7,10 +7,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import axios from "axios";
 import axiosInstance from "../../../../config/axios.config";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoggedInuser } from "../../../../reducers/user.reducer";
 
 function Login() {
+  const dispatch = useDispatch();
+
   const LoginSchema = Yup.object({
     email: Yup.string().email().required(),
     password: Yup.string().min(6).required(),
@@ -33,6 +36,9 @@ function Login() {
             email: response.result.data.email,
             role: response.result.data.role,
           };
+
+          dispatch(setLoggedInuser(formattedData));
+
           localStorage.setItem(
             "accessToken",
             response.result.token.accessToken
@@ -61,6 +67,16 @@ function Login() {
       // console.log("🚀 ~ file: login.pages.jsx:17 ~ Login ~ values:", values);
     },
   });
+
+  let loggedInUser = useSelector((root) => {
+    return root.User?.loggedInUser;
+  });
+  useEffect(() => {
+    if (loggedInUser) {
+      toast.info("You are already logged in");
+      navigate("/" + loggedInUser.role);
+    }
+  }, [loggedInUser]);
 
   return (
     <Container style={{ width: "500px", marginTop: "50px" }}>

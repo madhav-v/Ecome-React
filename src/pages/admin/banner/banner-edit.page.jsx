@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Card,
@@ -8,16 +8,20 @@ import {
   Form,
   Button,
 } from "react-bootstrap";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaEdit, FaPaperPlane, FaRedo } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { TextInput } from "../../../components/form-component";
 import banner from ".";
 import { toast } from "react-toastify";
+import { formatDate } from "../../../config/function";
 
-const BannerCreateForm = () => {
+const BannerEditForm = () => {
   const navigate = useNavigate();
+  const params = useParams();
+
+  const [detail, setDetail] = useState();
 
   const validationSchema = Yup.object({
     title: Yup.string().required(),
@@ -41,25 +45,54 @@ const BannerCreateForm = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        // console.log(values);
-        // // submit
-        const response = await banner.bannerSvc.createBanner(values);
+        if (typeof values.image !== "object") {
+          delete values.image;
+        }
+        const response = await banner.bannerSvc.updateBanner(values, params.id);
         toast.success(response.msg);
         navigate("/admin/banner");
       } catch (error) {
         // TODO: Debug for error
         toast.error(
-          "Cannot create banner. Retry again after reloading the page..."
+          "Cannot update banner. Retry again after reloading the page..."
         );
       }
     },
   });
+
+  const getBannerDetail = async () => {
+    try {
+      let response = await banner.bannerSvc.getBannerById(params.id);
+      setDetail(response.result);
+    } catch (exception) {
+      toast.error("Banner cannot be fetched");
+      navigate("/admin/banner");
+    }
+  };
+
+  useEffect(() => {
+    if (detail) {
+      formik.setValues({
+        title: detail.title,
+        link: detail.link,
+        startDate: detail.startDate,
+        endDate: detail.endDate,
+        status: detail.status,
+        image: detail.image,
+      });
+    }
+  }, [detail]);
+
+  useEffect(() => {
+    getBannerDetail();
+  }, []);
+
   return (
     <>
       <Container fluid className="px-4">
         <Row>
           <Col sm={12} md={6}>
-            <h1 className="mt-4">Banner Create Page</h1>
+            <h1 className="mt-4">Banner Edit Page</h1>
           </Col>
           <Col md={6} sm={12} className="d-none d-md-block">
             <NavLink
@@ -72,16 +105,12 @@ const BannerCreateForm = () => {
         </Row>
         <Breadcrumb className="mb-4">
           <Breadcrumb.Item>
-            <li className="breadcrumb-item">
-              <Link role="button" className={"breadcrumb-item"} to="/admin">
-                Dashboard
-              </Link>
-            </li>
+            <NavLink to="/admin">Dashboard</NavLink>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <NavLink to="/admin/banner">Banner Listing</NavLink>
           </Breadcrumb.Item>
-          <Breadcrumb.Item active>Banner Create</Breadcrumb.Item>
+          <Breadcrumb.Item active>Banner Edit</Breadcrumb.Item>
         </Breadcrumb>
 
         <Card className="mb-4">
@@ -90,6 +119,7 @@ const BannerCreateForm = () => {
               <TextInput
                 label="Name"
                 name="title"
+                value={formik.values?.title}
                 changeEvent={formik.handleChange}
                 placeholder="Enter title..."
                 error={formik.errors?.title}
@@ -99,6 +129,7 @@ const BannerCreateForm = () => {
                 label="URL(For Redirection):"
                 type="url"
                 name="link"
+                value={formik.values?.link}
                 changeEvent={formik.handleChange}
                 placeholder="Enter URL..."
                 error={formik.errors?.link}
@@ -113,7 +144,11 @@ const BannerCreateForm = () => {
                         type="date"
                         name="startDate"
                         onChange={formik.handleChange}
-                        value={formik.values?.startDate}
+                        value={
+                          formik.values?.startDate
+                            ? formatDate(formik.values.startDate)
+                            : ""
+                        }
                         placeholder="Start Date"
                         size="sm"
                       />
@@ -126,7 +161,11 @@ const BannerCreateForm = () => {
                         type="date"
                         name="endDate"
                         onChange={formik.handleChange}
-                        value={formik.values?.endDate}
+                        value={
+                          formik.values?.endDate
+                            ? formatDate(formik.values.endDate)
+                            : ""
+                        }
                         size="sm"
                       />
                       <span className="text-danger">
@@ -217,4 +256,4 @@ const BannerCreateForm = () => {
   );
 };
 
-export default BannerCreateForm;
+export default BannerEditForm;

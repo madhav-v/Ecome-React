@@ -15,6 +15,7 @@ import {
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import noUser from "../../assets/images/no-user.png";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 export const AdminTopNav = () => {
   const toggleSidebar = (e) => {
@@ -60,7 +61,6 @@ export const AdminTopNav = () => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              Madhav
               <img
                 src={noUser}
                 alt=""
@@ -97,6 +97,10 @@ export const AdminTopNav = () => {
 };
 
 export const AdminSidebar = () => {
+  let loggedinUser = useSelector((root) => {
+    return root.User.loggedInUser;
+  });
+
   return (
     <>
       <div id="layoutSidenav_nav">
@@ -140,7 +144,7 @@ export const AdminSidebar = () => {
                   <NavLink className="nav-link" to="/admin/banner/create">
                     Add Banner
                   </NavLink>
-                  <NavLink className="nav-link" to="/admin/banner/edit/123">
+                  <NavLink className="nav-link" to="/admin/banner/">
                     List Banner
                   </NavLink>
                 </nav>
@@ -163,7 +167,7 @@ export const AdminSidebar = () => {
                 </div>
                 User Management
               </NavLink>
-              <NavLink className="nav-link" to="/admin/user">
+              <NavLink className="nav-link" to="/admin/product">
                 <div className="sb-nav-link-icon">
                   <FaProductHunt />
                 </div>
@@ -191,7 +195,7 @@ export const AdminSidebar = () => {
           </div>
           <div className="sb-sidenav-footer">
             <div className="small">Logged in as:</div>
-            Madhav Dhungana
+            {loggedinUser && loggedinUser.name}
           </div>
         </nav>
       </div>

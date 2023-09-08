@@ -7,7 +7,7 @@ const CategoryDetail = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       Category Detail Page of {params.slug}
     </>
   );
