@@ -80,7 +80,7 @@ function Register() {
   useEffect(() => {
     if (loggedInUser) {
       toast.info("You are already logged in");
-      navigate("/" + loggedInUser.role);
+      navigate("/");
     }
   }, [loggedInUser]);
 
@@ -119,7 +119,7 @@ function Register() {
             onChange={formik.handleChange}
             value={formik.values.role}
           >
-            <option value={"seller"}>Seller</option>
+            {/* <option value={"seller"}>Seller</option> */}
             <option value={"customer"}>Customer</option>
           </Form.Select>
           <span className="text-danger">{formik.errors?.role}</span>

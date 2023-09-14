@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./megamenu.css";
 import category from "../../admin/category";
 import brand from "../../admin/brand";
+import "./search.css";
 import {
   Container,
   Navbar,
@@ -14,22 +15,32 @@ import {
   FormControl,
 } from "react-bootstrap";
 import {
-  FaBell,
   FaFacebook,
   FaInstagram,
   FaShoppingCart,
-  FaTiktok,
-  FaTwitter,
   FaUser,
 } from "react-icons/fa";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import SingleProductListGrid from "./single-product-list-grid.component";
 
 const Header = () => {
   let loggedinUser = useSelector((root) => {
     return root.User.loggedInUser;
   });
+
+  const cartQty = useSelector((root) => {
+    let cartData = root.cart.cart;
+    let qty = 0;
+    if (cartData) {
+      cartData.map((item) => {
+        qty += Number(item.qty);
+      });
+    }
+    return qty;
+  });
+
   const navigate = useNavigate();
 
   const logout = (e) => {
@@ -41,23 +52,37 @@ const Header = () => {
     toast.success("Thank you for using our system");
     navigate("/login");
   };
-
+  const [searchQuery, setSearchQuery] = useState();
+  const [searchResult, setSearchResults] = useState();
   const [cats, setCats] = useState();
   const [brands, setBrands] = useState();
 
-  // const loadCategories = useCallback(async () => {
-  //   let response = await category.categorySvc.listAllHomeCategories(20, 1);
-  //   // console.log(response.result);
-  //   setCats(response.result);
-  // }, []);
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      let response = await category.categorySvc.searchItems(searchQuery);
+      if (response && response.result.length > 0) {
+        setSearchResults(response.result);
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions here
+      console.error("Error:", error);
+    }
+  };
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setSearchQuery(inputValue);
+    if (!inputValue) {
+      setSearchResults([]); // Clear the search results
+    }
+  };
 
-  // const loadBrands = useCallback(async () => {
-  //   let response = await brand.brandSvc.listAllHomeBrands(20, 1);
-  //   setBrands(response.result);
-  // }, []);
   const loadCategories = useCallback(async () => {
     try {
       let response = await category.categorySvc.listAllHomeCategories(20, 1);
+
       if (response && response.result) {
         setCats(response.result);
       }
@@ -80,7 +105,7 @@ const Header = () => {
   useEffect(() => {
     loadCategories();
     loadBrands();
-  });
+  }, []);
 
   return (
     <>
@@ -97,7 +122,7 @@ const Header = () => {
           <NavLink className={"navbar-brand"} to="/">
             Ordinary
           </NavLink>
-          <Form className="d-flex">
+          <Form className="d-flex" onSubmit={handleSearch}>
             <FormControl
               type="search"
               placeholder="Search for products"
@@ -108,8 +133,12 @@ const Header = () => {
                 backgroundColor: "white",
                 marginLeft: "10px",
               }}
+              value={searchQuery}
+              onChange={handleInputChange}
             />
+
             <Button
+              type="submit"
               style={{
                 backgroundColor: "#d9c584",
                 color: "black",
@@ -176,7 +205,7 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mx-auto">
               <NavLink className={"nav-link"} to="/cart">
-                <FaShoppingCart size={"20px"} color="black" /> 0
+                <FaShoppingCart size={"20px"} color="black" /> ({cartQty ?? ""})
               </NavLink>
 
               {loggedinUser ? (
@@ -214,6 +243,16 @@ const Header = () => {
         </Container>
       </Navbar>
       <hr style={{ margin: "0", borderTop: "1px solid #333333" }} />
+      <div className="search-results-container">
+      {searchResult && searchResult.length > 0 && (
+        <div className="search-results">
+          {searchResult.map((search, index) => (
+            <SingleProductListGrid key={index} product={search} />
+          ))}
+        </div>
+      )}
+      </div>
+     
     </>
   );
 };

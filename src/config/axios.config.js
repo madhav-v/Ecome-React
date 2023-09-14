@@ -65,13 +65,13 @@ axiosInstance.interceptors.response.use(
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshtoken");
         localStorage.removeItem("user");
-        toast.warn("Please login first");
-        window.location.href = "/login";
+        // toast.warn("Please login first");
+        // window.location.href = "/login";
       } else if (error.response.status === 403) {
         // access denied
         toast.warning("You do not have previlege to access this panel");
         window.location.href = "/";
-      } else if (error.response.status === "404") {
+      } else if (error.response.status === 404) {
         window.localStorage.href = "/error";
       } else {
         throw error.response;

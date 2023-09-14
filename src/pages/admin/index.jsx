@@ -179,18 +179,6 @@ export const AdminSidebar = () => {
                 </div>
                 Order Management
               </NavLink>
-              <NavLink className="nav-link" to="/admin/transaction">
-                <div className="sb-nav-link-icon">
-                  <FaDollarSign />
-                </div>
-                Transactions Management
-              </NavLink>
-              <NavLink className="nav-link" to="/admin/review">
-                <div className="sb-nav-link-icon">
-                  <FaStreetView />
-                </div>
-                Review Management
-              </NavLink>
             </div>
           </div>
           <div className="sb-sidenav-footer">

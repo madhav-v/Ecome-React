@@ -99,9 +99,9 @@ const ProductForm = ({ submitAction, detail = null }) => {
       values.brand = values.brand.value;
       values.sellerId = values.sellerId?._id ?? null;
       values.attributes = JSON.stringify(attributes);
-      console.log(values.attributes);
 
       const formData = new FormData();
+      console.log(values);
 
       if (values.images) {
         values.images.map((image) => {
@@ -111,6 +111,7 @@ const ProductForm = ({ submitAction, detail = null }) => {
         });
         delete values.images;
       }
+
       Object.keys(values).map((field) => {
         formData.append(field, values[field]);
       });

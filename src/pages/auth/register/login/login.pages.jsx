@@ -16,7 +16,7 @@ function Login() {
 
   const LoginSchema = Yup.object({
     email: Yup.string().email().required(),
-    password: Yup.string().min(6).required(),
+    password: Yup.string().min(8).required(),
   });
 
   const navigate = useNavigate();
@@ -73,8 +73,13 @@ function Login() {
   });
   useEffect(() => {
     if (loggedInUser) {
-      toast.info("You are already logged in");
-      navigate("/" + loggedInUser.role);
+      let redirect = localStorage.getItem("redirect")
+        ? localStorage.getItem("redirect")
+        : "/";
+
+      toast.info("You are logged in");
+
+      navigate(redirect);
     }
   }, [loggedInUser]);
 

@@ -1,31 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
-import category from "../admin/category";
+import brand from "../admin/brand";
 import { toast } from "react-toastify";
 import SingleProductListGrid from "../home/component/single-product-list-grid.component";
 
-const CategoryDetail = () => {
+const BrandDetail = () => {
   let params = useParams();
-  const [catDetail, setCatDetail] = useState();
-  const [ProdDetail, setProdDetail] = useState();
+  const [brandDetail, setBrandDetail] = useState();
+  const [products, setProducts] = useState();
   const [loading, setLoading] = useState(true);
 
-  const loadCategoryDetail = useCallback(async () => {
+  const loadBrandDetail = useCallback(async () => {
     try {
-      let response = await category.categorySvc.getDetailCategory(params.slug);
-      setCatDetail(response.data.categoryDetail);
-      setProdDetail(response.data.productList);
-     
+      let response = await brand.brandSvc.getBrandDetail(params.slug);
+      setBrandDetail(response.data.brandDetail);
+      setProducts(response.data.productList);
     } catch (exception) {
-      toast.warn("Error during Category Fetch");
+      toast.warn("Error during Brand Fetch");
+      console.log("Error:", exception);
     } finally {
       setLoading(false);
     }
   }, [params]);
 
   useEffect(() => {
-    loadCategoryDetail();
+    loadBrandDetail();
   }, [params]);
 
   return (
@@ -33,17 +33,17 @@ const CategoryDetail = () => {
       <Container className="my-3">
         {loading ? (
           <>Loading..</>
-        ) : (
+        ) : brandDetail ? ( // Check if brandDetail is available
           <>
             <Row className="bg-light">
               <Col>
-                <h4>Products of {catDetail.name}</h4>
+                <h4>Products of {brandDetail.name}</h4>
               </Col>
             </Row>
             <Row>
-              {ProdDetail ? (
+              {products ? (
                 <>
-                  {ProdDetail.map((product, index) => (
+                  {products.map((product, index) => (
                     <SingleProductListGrid key={index} product={product} />
                   ))}
                 </>
@@ -54,10 +54,12 @@ const CategoryDetail = () => {
               )}
             </Row>
           </>
+        ) : (
+          <p className="text-danger">Brand details not available</p>
         )}
       </Container>
     </>
   );
 };
 
-export default CategoryDetail;
+export default BrandDetail;

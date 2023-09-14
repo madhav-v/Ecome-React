@@ -24,11 +24,17 @@ import Category from "../pages/admin/category/";
 import Product from "../pages/admin/product/";
 import { useDispatch } from "react-redux";
 import { getLoggedInUser } from "../reducers/user.reducer";
+import BrandDetail from "../pages/brand/brand-detail";
+import ProductDetail from "../pages/product";
+import { setItemInTheCart } from "../reducers/product.reducer";
+import OrderList from "../pages/admin/cart/order.list.page";
+// import SearchResultsPage from "../pages/home/component/search.results";
 
 const Routing = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getLoggedInUser());
+    dispatch(setItemInTheCart());
   }, []);
   return (
     <>
@@ -41,6 +47,8 @@ const Routing = () => {
             <Route path="about-us" element={<AboutUs />}></Route>
 
             <Route path="category/:slug" element={<CategoryDetail />}></Route>
+            <Route path="brand/:slug" element={<BrandDetail />} />
+            <Route path="product/:slug" element={<ProductDetail />} />
 
             <Route path="blogs" element={<Blogs />}></Route>
             <Route path="login" element={<Login />}></Route>
@@ -49,6 +57,10 @@ const Routing = () => {
             <Route path="forget-password" element={<ForgetPassword />}></Route>
             <Route path="set-password/:token" element={<SetPassword />}></Route>
             <Route path="cart" element={<Cart />}></Route>
+            {/* <Route
+              path="/search-results"
+              element={<SearchResultsPage />}
+            ></Route> */}
 
             <Route path="*" element={<ErrorPage />}></Route>
           </Route>
@@ -124,7 +136,7 @@ const Routing = () => {
               path="order"
               element={
                 <>
-                  <Outlet />
+                  <OrderList />
                 </>
               }
             />

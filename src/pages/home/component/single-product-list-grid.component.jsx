@@ -4,15 +4,15 @@ import { NavLink } from "react-router-dom";
 import { Col, Card, Badge } from "react-bootstrap";
 
 const SingleProductListGrid = ({ product }) => {
-  const firstImage =
-    product.images && product.images.length > 0 ? product.images[0] : null;
-
   return (
     <>
       <Col sm={6} md={4} lg={3} className="mb-3">
         <Card>
           <Card.Img
-            src={import.meta.env.VITE_IMAGE_URL + "/products/" + firstImage}
+            style={{ height: "200px" }}
+            src={
+              import.meta.env.VITE_IMAGE_URL + "/products/" + product.images[0]
+            }
           ></Card.Img>
           <Card.Body>
             <NavLink
@@ -36,9 +36,11 @@ const SingleProductListGrid = ({ product }) => {
               )}
             </p>
             <p>
-              <NavLink to="/brand/apple" className={"me-3"}>
-                <Badge bg="info">{product.brand.name}</Badge>
-              </NavLink>
+              {product.brand && (
+                <NavLink to={`/brand/${product.brand.slug}`} className={"me-3"}>
+                  <Badge bg="info">{product.brand.name}</Badge>
+                </NavLink>
+              )}
 
               {product.categories &&
                 product.categories.map((cat) => (

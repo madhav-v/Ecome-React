@@ -12,6 +12,14 @@ class BrandService extends HttpService {
       throw exception;
     }
   };
+  getBrandDetail = async (slug) => {
+    try {
+      let respone = await this.getRequest("/v1/brand/" + slug + "/detail");
+      return respone;
+    } catch (exception) {
+      throw exception;
+    }
+  };
   listAllBrands = async (perpage = 10, page = 1) => {
     try {
       let respone = await this.getRequest(
@@ -26,8 +34,7 @@ class BrandService extends HttpService {
   listAllHomeBrands = async (perpage = 10, page = 1) => {
     try {
       let response = await this.getRequest(
-        "/v1/brand/list/home?perPage=" + perpage + "&page=" + page,
-        { auth: true }
+        "/v1/brand/list/home?perPage=" + perpage + "&page=" + page
       );
       return response;
     } catch (exception) {

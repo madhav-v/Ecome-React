@@ -44,6 +44,7 @@ const HomeBanner = () => {
                 <a href={banner.link} target="_blank">
                   <img
                     className="img img-fluid"
+                    style={{ height: "40%" }}
                     src={
                       import.meta.env.VITE_IMAGE_URL + "/banner/" + banner.image
                     }

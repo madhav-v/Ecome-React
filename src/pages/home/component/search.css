@@ -1,0 +1,29 @@
+.search-results {
+    
+    background-color: white; 
+    border: 1px solid #ccc; 
+    z-index: 1;
+    width: 100%; 
+    padding: 10px;
+    margin-right: 3px;
+   display: flex;
+    margin-bottom: 5px; 
+    flex-wrap: wrap;
+    position: absolute; /* Keep absolute positioning for the results */
+    top: 100%; /* Position below the search input */
+    left: 0; /* Align with the left edge of the container */
+    box-sizing: border-box;
+  
+}
+  
+   
+  
+  .search-result-item {
+    width: calc(25% - 10px); 
+    margin: 5px; 
+
+    
+  }
+  .search-results-container {
+    position: relative; 
+  }
